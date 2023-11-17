@@ -2,15 +2,15 @@
 title: "Danish Church records"
 author: 'Christian Vedel<br>
 Email: christian-vs@sam.sdu.dk<br>
-Twitter: @ChristianVedel'
+Twitter: @ChristianVedel<br><br><br>
+.small123[*[github.com/christianvedels/Danish-Church-Records](https://github.com/christianvedels/Danish-Church-Records)*]'
 date: "Updated `r Sys.Date()`" 
 output:
   xaringan::moon_reader:
-    includes:
-      after_body: insert-logo.html
     self_contained: false
     lib_dir: libs
     nature:
+      ratio: '16:9'
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
@@ -21,6 +21,28 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval=TRUE, include=TRUE, cache=TRUE, warnings = FALSE, message = FALSE, echo = FALSE)
 library(tidyverse)
+setwd("..") # Only when knitting
+load("Data/Tmp_data/toydata.Rdata")
+load("Data/Tmp_data/toydata_clean.Rdata")
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r xaringan-tile-view, echo=FALSE}
+xaringanExtra::use_tile_view()
+```
+
+```{r xaringan-logo, echo=FALSE}
+xaringanExtra::use_logo(
+  image_url = "Logos.png",
+  width = "55px"
+)
+```
+
+```{r xaringanExtra, echo = FALSE}
+xaringanExtra::use_progress_bar(color = "#808080", location = "top")
 ```
 
 ```{css echo=FALSE}
@@ -74,23 +96,257 @@ library(tidyverse)
   background-color: yellow;
 }
 
+
+img {
+    transition:transform 0.25s ease;
+}
+
+img:hover {
+    -webkit-transform:scale(1.5); /* or some other value */
+    transform:scale(1.5);
+}
+
 ```
 
-Test
+
+# 'What to do with lots of data'
+
+.pull-left[
+## Introduction
+- 22 mil. observations from church books
+- Can we use it for something (yes).
+- What can we use it for?
+
+## Today
+- Mostly descriptive statistics
+- Based on 'toysample' of 100k observations 
+- Some data problems but also opportunities 
+]
+
+.pull-right[
+![1866Book](Figures/OdenseGraabroedreHospitalsSogn_1866.jpg)
+*Church book 1866 from Gråbrødre Hospitals Sogn*
+
+]
+
 
 
 ---
-# Basic info
-- Transcription done by ancestry
-- Years 1813-1917
-- Covers baptism, confirmation, marriages burials, arrivals and departures 
+.pull-left[
+### Basic data info
+- Transcription done by *Ancestry*
+- Years **1813-1917**
+- Covers baptism, confirmation, marriages, burials, arrivals and departures 
 - Made available to us via Link lives 
+
+### Historical background (1/2)*
+- Church books is a tradition dating back to the late 16th century
+- **1645-46**: Church book kept by law
+  + Religious and administrative purposes 
+- **1736:** Confirmation added 
+- **1812:** Standardisation and *arrival* and *departure* added 
+]
+
+.footnote[
+.small123[\*Stenbæk (2023) https://denstoredanske.lex.dk/kirkeb%C3%B8ger]
+]
+
+--
+
+.pull-right[
+### Historical background (2/2)*
+- **Two books kept:** Main book and 'counter' book (Ministerialbog og kontraministerial bog)
+- Both kept to ensure data quality and that archives were not lost 
+- Acted as central database of citisens 
+- Still does to some extend 
+
+.center[
+```{r out.width="200px"}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Henning_Toft_Bro3_%28crop%29.jpg/381px-Henning_Toft_Bro3_%28crop%29.jpg?20120208065610")
+```
+  
+.small123[*Danish priest - they've got your data! (wikimedia.org)*]
+]
+
+]
+
+
+
+
+
+
+
+---
+# Data comes in one big file
+.pull-left-narrow[
+- It follows some internal standard format at *Ancestry*
+- *Wide* format
+- Will cause us trouble
+]
+
+.pull-right-wide[
+```{r}
+data0 = data1
+x = data0 %>% names() %>% data.frame(`Variable names` = .)
+
+DT::datatable(
+  x,
+  fillContainer = FALSE, options = list(pageLength = 6),
+  filter = "top"
+)
+```
+]
+
+
+
 
 ---
 # Data problems
 - Sometimes a range of years is provided: "1862-1864"
+- Sometimes the *county* is written in the *state* column
+
 
 ---
 # Basic stats
 
-22.8 mil observations
+.pull-left[
+- 22.8 mil observations
+- Baptism, burial, etc. (see on the right)
+- Additionally 5.5% unidentified observations
+]
+
+
+
+.pull-right[
+.center[
+### Distribution
+]
+```{r}
+data_clean %>% 
+  group_by(event) %>% 
+  count() %>% 
+  ungroup() %>% 
+  mutate(
+    pct = paste0(signif(100*n/sum(n), 4), "%")
+  ) %>% 
+  arrange(-n) %>% 
+  select(-n) %>% 
+  knitr::kable(format = "pipe")
+```
+]
+
+
+
+
+---
+.pull-left-narrow[
+# Event ages
+- Arrival and Departure alines
+- No age for confirmations
+- A lot of missing values
+- Good stats for arrival and departures
+- Some of the missing values might be due to ranges "1856-1861"
+]
+
+.pull-right-wide[
+.small123[
+.panelset[
+.panel[.panel-name[All panes]
+![Event_ages](Figures/Event_ages.png)
+]
+.panel[.panel-name[Arrival]
+![Event_ages](Figures/Event_ages_Arrival.png)
+]
+.panel[.panel-name[Baptism]
+![Event_ages](Figures/Event_ages_Baptism.png)
+]
+.panel[.panel-name[Burial]
+![Event_ages](Figures/Event_ages_Baptism.png)
+]
+.panel[.panel-name[Death]
+![Event_ages](Figures/Event_ages_Death.png)
+]
+.panel[.panel-name[Departure]
+![Event_ages](Figures/Event_ages_Departure.png)
+]
+.panel[.panel-name[Marriage]
+![Event_ages](Figures/Event_ages_Marriage.png)
+]
+
+]
+]
+]
+
+---
+.pull-left-narrow[
+# Years
+- 0.4% EventYear NA 'by coercion'
+
+]
+
+.pull-right-wide[
+.small123[
+.panelset[
+.panel[.panel-name[All]
+![Event_ages](Figures/Data_availability_years.png)
+]
+.panel[.panel-name[Arrival]
+![Event_ages](Figures/Event_years_Arrival.png)
+]
+.panel[.panel-name[Baptism]
+![Event_ages](Figures/Event_years_Baptism.png)
+]
+.panel[.panel-name[Burial]
+![Event_ages](Figures/Event_years_Burial.png)
+]
+.panel[.panel-name[Death]
+![Event_ages](Figures/Event_years_Death.png)
+]
+.panel[.panel-name[Departure]
+![Event_ages](Figures/Event_years_Departure.png)
+]
+.panel[.panel-name[Marriage]
+![Event_ages](Figures/Event_years_Marriage.png)
+]
+
+]
+]
+]
+
+---
+# Birth years
+.pull-left[
+- We do have birth years in many cases
+]
+
+.pull-right[
+![Birth years](Figures/Birth_years.png)
+]
+
+---
+# Crude child mortality
+.pull-left[
+- Confirmation at 14 
+- Lag of Baptism and confirmation
+]
+
+.pull-right[
+![Crude_child_mortality](Figures/Crude_child_mortality.png)
+]
+
+
+---
+# Geography
+.pull-left[
+- 2982 parishes (spelling mistakes, changing borders etc.)
+- Mix-up between 'county' and 'state' variables
+- Some migration from abroad 
+- Automatic geo coding failed
+
+]
+
+---
+# References
+Stenbæk, Jørgen (2023). Kirkebøger i Den Store Danske på lex.dk. https://denstoredanske.lex.dk/kirkeb%C3%B8ger
+
+
