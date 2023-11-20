@@ -22,6 +22,13 @@ plot_height = plot_width*plot_aspect
 data_clean = data_clean %>% 
   mutate(
     EventAge = as.numeric(EventAge)
+  ) %>% 
+  mutate(
+    Gender = case_when(
+      Gender == "Kvinde" ~ "F",
+      Gender == "Mandlige" ~ "M",
+      TRUE ~ "Not available"
+    )
   )
 
 # ==== Simple count ====
@@ -46,6 +53,7 @@ p1 = data_clean %>%
     legend.position = "bottom"
   )
   
+
 # p1
 ggsave0(p1, "Event_ages")
 
@@ -61,12 +69,12 @@ for(e in unique(data_clean$event)){
   nNA = data_e_allN - NROW(data_e)
   
   p1 = data_e %>% 
-    ggplot(aes(EventAge, fill = event)) + 
+    ggplot(aes(EventAge, fill = Gender)) + 
     geom_density(alpha = 0.5) +
     theme_bw() + 
     geom_vline(xintercept = ages, lty = 2) +
     theme(
-      legend.position = "none" 
+      legend.position = "bottom" 
     ) + 
     labs(
       title = e,
@@ -74,9 +82,9 @@ for(e in unique(data_clean$event)){
         "Observations ", NROW(data_e), "\n(NA: ", nNA, ")"
       )
     ) + 
-    scale_fill_manual(values = c(black=e))
+    scale_fill_manual(values = c("F"="#b33d3d", "M"="#273a8f"))
   
-  # p1
+  p1
   ggsave0(p1, paste0("Event_ages_", e))
 }
 

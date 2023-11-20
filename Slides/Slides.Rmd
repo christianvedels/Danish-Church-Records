@@ -129,7 +129,15 @@ img:hover {
 
 ]
 
+---
+# Context: What similar data do we have from Link Lives? 
+- Census records (1787, 1801, 1834, 1840, 1845, 1850, 1860, 1880, 1885 (cph), 1901) 
+  + With gender, place of birth, current parish, occupation, civil status, etc.
+- Burial records for Copenhagen 1861-1911
+- Some attempt at linking some of these 
+- ...And we also have HISCO codes for all of this data  
 
+- The church books adds more granular data and more of it. 
 
 ---
 .pull-left[
@@ -170,12 +178,6 @@ knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/thumb/1/
 
 ]
 
-
-
-
-
-
-
 ---
 # Data comes in one big file
 .pull-left-narrow[
@@ -204,6 +206,8 @@ DT::datatable(
 # Data problems
 - Sometimes a range of years is provided: "1862-1864"
 - Sometimes the *county* is written in the *state* column
+- ~1 week of work in geotagging 
+- ~1 month of work if we want it done well 
 
 
 ---
@@ -241,11 +245,12 @@ data_clean %>%
 ---
 .pull-left-narrow[
 # Event ages
-- Arrival and Departure alines
+- Arrival and Departure alignes
 - No age for confirmations
 - A lot of missing values
 - Good stats for arrival and departures
-- Some of the missing values might be due to ranges "1856-1861"
+- Some of the missing values might be due to ranges "1856-1861" 
+- We can estimate 97.2% of genders based on names ([See slide 11, 13](https://raw.githack.com/christianvedels/News_and_Market_Sentiment_Analytics/main/Lecture%204%20-%20Classification%20pt%202/Slides.html#16))
 ]
 
 .pull-right-wide[
@@ -314,16 +319,6 @@ data_clean %>%
 ]
 
 ---
-# Birth years
-.pull-left[
-- We do have birth years in many cases
-]
-
-.pull-right[
-![Birth years](Figures/Birth_years.png)
-]
-
----
 # Crude child mortality
 .pull-left[
 - Confirmation at 14 
@@ -342,8 +337,24 @@ data_clean %>%
 - Mix-up between 'county' and 'state' variables
 - Some migration from abroad 
 - Automatic geo coding failed
+- Should we use better parish borders than 1820?
 
 ]
+
+
+---
+# Applicaitons
+
+- Growth or reallocation: All sources of population growth are now available: Birth, Death, Arrival, Departure 
+- Mobility 
+- Linking to census data:
+  + Marriages 
+  + Occupations 
+  + Individual fertility 
+- A lot more 
+- Requires thorough cleaning of data 
+
+
 
 ---
 # References
