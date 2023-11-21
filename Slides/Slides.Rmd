@@ -266,7 +266,7 @@ data_clean %>%
 ![Event_ages](Figures/Event_ages_Baptism.png)
 ]
 .panel[.panel-name[Burial]
-![Event_ages](Figures/Event_ages_Baptism.png)
+![Event_ages](Figures/Event_ages_Burial.png)
 ]
 .panel[.panel-name[Death]
 ![Event_ages](Figures/Event_ages_Death.png)

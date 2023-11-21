@@ -23,8 +23,8 @@ library(tidygeocoder)
 # set.seed(20)
 # data1 = data0 %>% sample_n(100000)
 # 
-# save(data1, file = "Data/Tmp_data/toydata.Rdata")
-load("Data/Tmp_data/toydata.Rdata")
+# save(data1, file = "Data/Data_NR/Tmp_data/toydata.Rdata")
+load("Data/Data_NR/Tmp_data/toydata.Rdata")
 data0 = data1
 data0 %>% names()
 
@@ -291,7 +291,7 @@ sum(!(identifiers %in% data_clean$unique_identifier)) # 5.5%
 #   )
 
 # ==== Save ====
-save(data_clean, file = "Data/Tmp_data/toydata_clean.Rdata")
+save(data_clean, file = "Data/Data_NR/Tmp_data/toydata_clean.Rdata")
 
 # ==== Descriptive ====
 data_clean %>% 

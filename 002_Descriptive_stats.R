@@ -11,7 +11,7 @@ library(tidyverse)
 source("000_Functions.R")
 
 # ==== Load data ====
-load("Data/Tmp_data/toydata_clean.Rdata")
+load("Data/Data_NR/Tmp_data/toydata_clean.Rdata")
 
 # ==== Params ====
 plot_width = 8
@@ -218,9 +218,6 @@ p1 = data_clean %>%
   group_by(event, EventYear_num) %>% 
   count() %>% 
   ungroup() %>% 
-  mutate(
-    n = n/(sum(n)) * N_all*(n_short/100000)
-  ) %>% 
   pivot_wider(names_from = event, values_from = n) %>% 
   mutate(
     dif14 = lag(Baptism, 14) - Confirmation
